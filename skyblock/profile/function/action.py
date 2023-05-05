@@ -76,7 +76,7 @@ def buy(self, trade: tuple, amount: int, /):
 
     for pointer in good:
         pointer['count'] = pointer.get('count', 1) * amount
-        self.recieve_item(pointer)
+        self.receive_item(pointer)
         name = pointer['name']
         count = pointer['count']
         kwargs = {key: pointer[key] for key in pointer
@@ -119,7 +119,7 @@ def claim_minion(self, slot: int, /) -> bool:
     if len(items_left) != 0:
         red('Your inventory does not have enough space to add all items!')
         for pointer in items_left:
-            minion.recieve_item(pointer)
+            minion.receive_item(pointer)
     else:
         aqua(f"You claimed the {minion.display()}{AQUA}'s inventory!")
     self.placed_minions[slot] = minion
@@ -137,7 +137,7 @@ def combine(self, index_1: int, index_2: int, /):
         result_enchants = combine_enchant(item_1.enchantments, item_2.enchantments)
         self.inventory[index_1] = Empty()
         self.inventory[index_2] = Empty()
-        self.recieve_item({'name': 'enchanted_book',
+        self.receive_item({'name': 'enchanted_book',
                            'enchantments': result_enchants})
         return
 
@@ -158,7 +158,7 @@ def combine(self, index_1: int, index_2: int, /):
         }
         self.inventory[index_1] = Empty()
         self.inventory[index_2] = Empty()
-        self.recieve_item(pointer)
+        self.receive_item(pointer)
         return
 
     if (isinstance(item_2, Accessory | Armor | Bow | Sword | FishingRod | Pickaxe | Drill)
@@ -218,7 +218,7 @@ def combine(self, index_1: int, index_2: int, /):
         self.inventory[index_1] = Empty()
         self.inventory[index_2] = Empty()
         gray(f'- {GOLD}{format_number(cost)} Coins')
-        self.recieve_item(pointer)
+        self.receive_item(pointer)
         return
 
     if (item_1.name in {'hot_potato_book', 'fuming_potato_book'} and
@@ -242,7 +242,7 @@ def combine(self, index_1: int, index_2: int, /):
             pointer['hot_potato'] = pointer.get('hot_potato', 0) + 1
             self.inventory[index_1] = Empty()
             self.inventory[index_2] = Empty()
-            self.recieve_item(pointer)
+            self.receive_item(pointer)
         return
 
     if (isinstance(item_1, (Armor, Bow, Sword, FishingRod))
@@ -256,7 +256,7 @@ def combine(self, index_1: int, index_2: int, /):
             pointer['hot_potato'] = pointer.get('hot_potato', 0) + 1
             self.inventory[index_1] = Empty()
             self.inventory[index_2] = Empty()
-            self.recieve_item(pointer)
+            self.receive_item(pointer)
         return
 
     if isinstance(item_1, Dye) and isinstance(item_2, Armor):
@@ -265,7 +265,7 @@ def combine(self, index_1: int, index_2: int, /):
 
     if isinstance(item_1, Armor) and isinstance(item_2, Dye):
         item_1.dye = item_2.name.removesuffix('_dye')
-        self.recieve_item(item_1.to_obj())
+        self.receive_item(item_1.to_obj())
         self.inventory[index_2] = Empty()
         return
 
@@ -323,7 +323,7 @@ def consume(self, index: int, amount: int = 1, /):
         yellow(f'You may now fast travel to {GREEN}{name}{YELLOW}!')
 
     elif item.name in {'experience_bottle', 'grand_experience_bottle',
-                       'tiantium_experience_bottle'}:
+                       'titanic_experience_bottle'}:
         if amount > item.count:
             red("You don't have enough items to do that!")
             return
@@ -332,7 +332,7 @@ def consume(self, index: int, amount: int = 1, /):
             exp_amount = 8
         elif item.name == 'grand_experience_bottle':
             exp_amount = 1_500
-        elif item.name == 'tiantium_experience_bottle':
+        elif item.name == 'titanic_experience_bottle':
             exp_amount = 250_000
 
         item_copy = item.copy()
@@ -469,7 +469,7 @@ def craft(self, recipe: Recipe | RecipeGroup, amount: int = 1, /):
             setattr(result_item, key, value)
 
     result_item.count = result_pointer.get('count', 1) * amount
-    self.recieve_item(result_item.to_obj())
+    self.receive_item(result_item.to_obj())
 
     if name.endswith('_minion'):
         tier = result_pointer['tier']
@@ -542,7 +542,7 @@ def die(self, killer: str | None = None, /) -> bool:
             did_crack_piggy = True
             lost_coins = 0
             self.remove_item({'name': 'piggy_bank'})
-            self.recieve_item({'name': 'cracked_piggy_bank'})
+            self.receive_item({'name': 'cracked_piggy_bank'})
 
     did_broke_piggy = False
 
@@ -551,7 +551,7 @@ def die(self, killer: str | None = None, /) -> bool:
             did_broke_piggy = True
             lost_coins *= 0.25
             self.remove_item({'name': 'cracked_piggy_bank'})
-            self.recieve_item({'name': 'broken_piggy_bank'})
+            self.receive_item({'name': 'broken_piggy_bank'})
 
     self.purse -= lost_coins
 
@@ -598,12 +598,12 @@ def enchant(self, item_index: int, /):
         gray('This item cannot be enchanted!')
         return
 
-    avaliable = []
+    available = []
 
     all_ench = [row[0] for row in ENCHS]
     requirements = dict(ENCH_REQUIREMENTS)
 
-    gray('Avaliable enchantments and xp level needed:')
+    gray('Available enchantments and xp level needed:')
     for name in enchant_table:
         if name not in all_ench:
             continue
@@ -623,9 +623,9 @@ def enchant(self, item_index: int, /):
             for lvl, xp in enumerate(xps)
         ]
         discounted_level = [calc_exp_level(xp) for xp in discounted]
-        avaliable.append((name, discounted_level))
+        available.append((name, discounted_level))
 
-        blue(f'{len(avaliable):>2} {name}')
+        blue(f'{len(available):>2} {name}')
         if current > 0:
             xp_str = ', '.join(
                 f'{GRAY}{xp}' if lvl + 1 < current
@@ -649,11 +649,11 @@ def enchant(self, item_index: int, /):
             red('Invalid format. Please try again.')
             continue
 
-        index = self.parse_index(cmd[0], len(avaliable))
+        index = self.parse_index(cmd[0], len(available))
         if index is None:
             continue
 
-        name, lvls = avaliable[index]
+        name, lvls = available[index]
         level = self.parse_index(cmd[1], len(lvls))
         if index is None or level is None:
             continue
@@ -771,13 +771,13 @@ def remove_minion(self, slot: int, /):
         return
 
     minion = self.placed_minions[slot]
-    self.recieve_item({'name': minion.name, 'tier': minion.tier})
+    self.receive_item({'name': minion.name, 'tier': minion.tier})
     for item in minion.inventory:
         if isinstance(item, Empty):
             continue
 
         pointer = item.to_obj()
-        self.recieve_item(pointer)
+        self.receive_item(pointer)
         self.collect(pointer['name'], pointer.get('count', 1))
 
     self.placed_minions[slot] = Empty()
@@ -801,7 +801,7 @@ def remove_pet(self, index: int, /):
     pointer = pet.to_obj()
     pointer['active'] = False
     self.pets.pop(index)
-    self.recieve_item(pointer)
+    self.receive_item(pointer)
 
     green(f'You converted {pet.display()}{GREEN} into an item!')
 
@@ -852,7 +852,7 @@ def talkto_npc(self, npc: Npc, /) -> str | None:
         else:
             self.npc_silent(npc.name)
         if npc.claim_item is not None:
-            self.recieve_item(npc.claim_item)
+            self.receive_item(npc.claim_item)
         self.npc_talked.append(npc.name)
         return
     if npc.trades is not None:
@@ -938,7 +938,7 @@ def update(self, /, *, save=True):
         minion.last_action += minion.cooldown * iteration
         for pointer, average in MINION_LOOT[minion.name[:-7]]:
             _pointer = {**pointer, 'count': random_int(average * iteration)}
-            minion.recieve_item(_pointer)
+            minion.receive_item(_pointer)
         self.placed_minions[index] = minion
 
 

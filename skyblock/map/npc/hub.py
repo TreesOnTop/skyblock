@@ -51,7 +51,7 @@ HUB_NPCS = [
             (f"This game is still under heavy development,"
              f" don't forget to check {GREEN}GitHub{WHITE} often for updates!"),
             (f"If you'd like to discuss SkyBlock with other players"
-             f" then check out the SkyBlock respository"
+             f" then check out the SkyBlock repository"
              f" on {GREEN}GitHub{WHITE}!"),
         ]),
     Npc('anita'),

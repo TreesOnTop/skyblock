@@ -31,7 +31,7 @@ def display(self, /):
     return f'{BLUE}{format_name(self.name)} {format_roman(self.tier)}'
 
 
-def recieve_item(self, pointer: ItemPointer, /):
+def receive_item(self, pointer: ItemPointer, /):
     stack_count = get_stack_size(pointer['name'])
     count = pointer.get('count', 1)
     counter = count
@@ -81,6 +81,6 @@ def placed_minion_type(cls: type, /) -> type:
     cls.to_obj = to_obj
     cls.load = load
     cls.display = display
-    cls.recieve_item = recieve_item
+    cls.receive_item = receive_item
 
     return cls

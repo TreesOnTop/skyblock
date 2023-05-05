@@ -14,7 +14,7 @@ Last, wait for responses. If you've gone to this step, then congratulations, you
 
 # Testing for Bugs
 
-It would be really helpful if you report any bug you encounter, including any unexpected behaviour, weird errors and exits, item glitches, etc. I encourage you to try to crash or break this game (by playing), so that you may find rare bugs, and I'll be able to furthur optimize the code and make this project better.
+It would be really helpful if you report any bug you encounter, including any unexpected behaviour, weird errors and exits, item glitches, etc. I encourage you to try to crash or break this game (by playing), so that you may find rare bugs, and I'll be able to further optimize the code and make this project better.
 
 # Feature Ideas or Modification Suggestions
 

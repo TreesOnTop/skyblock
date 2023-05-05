@@ -40,7 +40,7 @@ ZOMBIES = [
     'lapis_zombie', 'redstone_pigman', 'diamond_zombie',
 
     'revenant_horror', 'atoned_horror',
-    'revenant_sychophant', 'revenant_champion', 'deformed_revenant',
+    'revenant_sycophant', 'revenant_champion', 'deformed_revenant',
     'atoned_champion', 'atoned_revenant',
 ]
 

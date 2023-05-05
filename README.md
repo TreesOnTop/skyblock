@@ -118,7 +118,7 @@ The content added in the Skyblock Remake may slightly differ from the original c
 ## Planned Features
 
 * Wardrobe and other bags/sacks.
-* Arachane & Dragons
+* Arachne & Dragons
 * Brewing and Potion effects
 * Commissions
 * Crystal Hollows
@@ -133,7 +133,7 @@ The content added in the Skyblock Remake may slightly differ from the original c
 * Pet Support Items
 * Power Stones and Magic Power
 * Slayers Quests
-* Templates and abilities optimation
+* Templates and abilities optimization
 * Templates organized for translation update (abilities included)
 
 # Example Saves

@@ -36,7 +36,7 @@ def reforge(player, /):
         elif isinstance(item, (Sword, FishingRod)):
             modifiers = MELEE_REFORGES
         else:
-            red('This item is not reforgable!')
+            red('This item is not reforgeable!')
             continue
 
         break
@@ -57,8 +57,8 @@ def reforge(player, /):
             red("You don't have enough coins to do that!")
             break
 
-        avaliable_modifiers = {*modifiers} - {item.modifier}
-        item.modifier = choice([*avaliable_modifiers])
+        available_modifiers = {*modifiers} - {item.modifier}
+        item.modifier = choice([*available_modifiers])
         player.inventory[index] = item
         player.purse -= cost
         current_display = item.display()

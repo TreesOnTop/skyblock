@@ -150,7 +150,7 @@ def mainloop(self):
                         continue
 
                     item = storage.pop(index)
-                    self.recieve_item(item.to_obj())
+                    self.receive_item(item.to_obj())
                     setattr(self, f'{words[1]}_bag', storage)
                     green(f'Removed {item.display()}{GREEN} from bag!')
 
@@ -281,7 +281,7 @@ def mainloop(self):
         elif words[0] in {'deposit', 'withdraw'}:
             if self.zone not in {'bank', 'dwarven_village'}:
                 red('You can only do that while you are '
-                    'at the Bank or Dwarvin Village!')
+                    'at the Bank or Dwarven Village!')
                 continue
 
             coins_str = words[1].lower() if len(words) == 2 else 'all'
@@ -437,7 +437,7 @@ def mainloop(self):
             if get_resource(name) is None:
                 continue
             if get(zone.resources, name) is None:
-                red(f'Resource not avaliable at {zone}: {name!r}')
+                red(f'Resource not available at {zone}: {name!r}')
                 continue
 
             tool_index = None
@@ -451,7 +451,7 @@ def mainloop(self):
                 if not isinstance(tool_item,
                                   (Empty, Axe, Hoe, Pickaxe, Drill)):
                     yellow(f'{tool_item.display()} {YELLOW}is not tool.\n'
-                           f'Using barehand.')
+                           f'Using bare-hand.')
                     tool_index = None
 
             amount = 1
@@ -480,7 +480,7 @@ def mainloop(self):
                 continue
             obj = item.to_obj()
             obj['count'] = amount
-            self.recieve_item(obj)
+            self.receive_item(obj)
 
         elif words[0] == 'goto':
             self.goto(words[1])
@@ -574,7 +574,7 @@ def mainloop(self):
 
             mob = get(zone.mobs, name)
             if mob is None:
-                red(f'Mob not avaliable at {zone}: {name!r}')
+                red(f'Mob not available at {zone}: {name!r}')
                 continue
 
             weapon_index = None
@@ -590,7 +590,7 @@ def mainloop(self):
                     pass
                 elif not isinstance(weapon_item, (Empty, Bow, Sword)):
                     yellow(f'{weapon_item.display()} {YELLOW}is not weapon.\n'
-                           f'Using barehand by default.')
+                           f'Using bare-hand by default.')
                     weapon_index = None
 
             amount = 1
@@ -709,7 +709,7 @@ def mainloop(self):
             for item in inventory:
                 if isinstance(item, Empty):
                     continue
-                self.recieve_item(item.to_obj())
+                self.receive_item(item.to_obj())
 
         elif words[0] == 'pickupstash':
             self.pickupstash()
@@ -928,7 +928,7 @@ def mainloop(self):
                 red(f'You are not wearing a {part}!')
                 continue
 
-            self.recieve_item(armor_piece.to_obj())
+            self.receive_item(armor_piece.to_obj())
             self.armor[slot_index] = Empty()
 
             green(f'Unequipped {armor_piece.display()}{GREEN}!')

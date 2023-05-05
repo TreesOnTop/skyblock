@@ -20,7 +20,7 @@ Show this message or get command description.
 Load a profile and run it.
 
 > ls
-List all the profile avaliable.
+List all the profile available.
 
 > new
 > touch
@@ -32,7 +32,7 @@ profile_doc = """
 Display equipped armor.
 
 > bag
-Show avaliable bags.
+Show available bags.
 
 > bag accessory
 > bag minion
@@ -125,7 +125,7 @@ Open the Heart of the Mountain menu.
 Teleport you to the hub.
 
 > info <index>
-Display detailed informatioon about the item.
+Display detailed information about the item.
 
 > item <id>
 Display information of any item.
@@ -201,7 +201,7 @@ Shows your current playtime.
 
 > recipe [recipe-name] [--all]
 > recipes [recipe-name] [--all]
-Shows all recipes or recipes avaliable.
+Shows all recipes or recipes available.
 
 > save
 Save the profile.

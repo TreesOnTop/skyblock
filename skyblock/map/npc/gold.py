@@ -2,7 +2,7 @@ from ...object.object import *
 
 from ..object import *
 
-
+# noinspection SpellCheckingInspection
 GOLD_NPCS = [
     Npc('gold_forger',
         init_dialog=[

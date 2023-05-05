@@ -8,7 +8,7 @@ SET_BONUSES = (
     'farm_suit_speed',
     'pumpkin_buff',
     'deflect',
-    'speester_bonus',
+    'speedster_bonus',
     'miners_outfit_haste',
     'lapis_armor_health',
     'glacite_expert_miner',

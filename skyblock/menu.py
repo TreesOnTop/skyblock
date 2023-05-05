@@ -37,7 +37,7 @@ def ls():
     if len(names) == 0:
         yellow('No profiles to be displayed.')
     else:
-        gray('Avaliable profiles:')
+        gray('Available profiles:')
         for name in names:
             if is_profile(name):
                 aqua(f' {name}')
@@ -53,15 +53,15 @@ def main():
     if is_dir() and is_dir('saves'):
         names = get_profiles()
         if len(names) != 0:
-            lastest, lastest_profile = 0, None
+            latest, latest_profile = 0, None
             for name in names:
                 profile = Profile.load(name)
-                if profile.last_update > lastest:
-                    lastest = profile.last_update
-                    lastest_profile = profile
+                if profile.last_update > latest:
+                    latest = profile.last_update
+                    latest_profile = profile
 
-            if lastest_profile is not None:
-                lastest_profile.mainloop()
+            if latest_profile is not None:
+                latest_profile.mainloop()
     else:
         red('folder not found: ~/skyblock/saves.')
 

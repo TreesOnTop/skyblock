@@ -71,7 +71,7 @@ ABILITIES = [
         variables={'percent': 33.3},
     ),
     NamedAbility(
-        id='speester_bonus',
+        id='speedster_bonus',
         name='Full Set Bonus: Bonus Speed',
         display_id='speed_increase',
         variables={'speed': 20},
@@ -393,15 +393,15 @@ ABILITIES = [
         variables={'value': 10},
     ),
     NamedAbility(
-        id='epic_flamvoyant',
-        name='Flamvoyant',
-        display_id='flamvoyant',
+        id='epic_flamboyant',
+        name='Flamboyant',
+        display_id='flamboyant',
         variables={'level': 15},
     ),
     NamedAbility(
-        id='legendary_flamvoyant',
-        name='Flamvoyant',
-        display_id='flamvoyant',
+        id='legendary_flamboyant',
+        name='Flamboyant',
+        display_id='flamboyant',
         variables={'level': 20},
     ),
     NamedAbility(

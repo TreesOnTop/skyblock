@@ -7,7 +7,7 @@ from ..path import join_path
 from .object import *
 
 
-__all__ = ['FISHING_TABLE', 'SEA_CREATRUE_TABLE']
+__all__ = ['FISHING_TABLE', 'SEA_CREATURE_TABLE']
 
 if not Path(join_path('skyblock', 'data', 'fishing')).is_dir():
     raise FileNotFoundError(
@@ -20,4 +20,4 @@ with _open(join_path('skyblock', 'data',
 
 with _open(join_path('skyblock', 'data',
                      'fishing', 'sea_creature_table.json')) as file:
-    SEA_CREATRUE_TABLE = load(file)
+    SEA_CREATURE_TABLE = load(file)

@@ -194,7 +194,7 @@ def get_ench(name: str, /) -> tuple[str, tuple[int]]:
                                for lvl in range(1, row[1] + 1))
             return exp_levels
     else:
-        raise ValueError(f'Enchantment not fonud: {name!r}')
+        raise ValueError(f'Enchantment not found: {name!r}')
 
 
 def get_family(name: str, /) -> str:

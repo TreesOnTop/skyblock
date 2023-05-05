@@ -15,7 +15,7 @@ from ...function.random import random_amount, random_bool, random_int
 from ...function.util import (
     checkpoint, format_crit, format_name, format_number, format_rarity, format_roman,
 )
-from ...object.fishing import FISHING_TABLE, SEA_CREATRUE_TABLE
+from ...object.fishing import FISHING_TABLE, SEA_CREATURE_TABLE
 from ...object.items import get_item
 from ...object.mobs import get_mob
 from ...object.object import *
@@ -87,12 +87,12 @@ def fish(self, rod_index: int, iteration: int = 1, /):
         is_sc = random_bool(sea_creature_chance / 100)
 
         if is_sc and fishing_level >= 1:
-            avaliable_sc = [line for line in SEA_CREATRUE_TABLE
+            available_sc = [line for line in SEA_CREATURE_TABLE
                             if line[2] <= fishing_level]
-            total_sc_weight = sum(line[1] for line in avaliable_sc)
+            total_sc_weight = sum(line[1] for line in available_sc)
 
             pool = random() * total_sc_weight
-            for mob_name, weight, _, text in avaliable_sc:
+            for mob_name, weight, _, text in available_sc:
                 if pool < weight:
                     break
                 pool -= weight
@@ -119,7 +119,7 @@ def fish(self, rod_index: int, iteration: int = 1, /):
                 pet_item = get_item('dolphin_pet', rarity=dolphin_pet_rarity)
                 green(f'You reached a new Sea Creature Killed Milestone of {BLUE}{sea_creature_killed} {GREEN}kills!')
                 green(f'A wild {pet_item.display()} {GREEN}has decided to befriend you!')
-                self.recieve_item(pet_item.to_obj())
+                self.receive_item(pet_item.to_obj())
 
             if use_expertise:
                 self.inventory[rod_index].expertise_count += 1
@@ -138,7 +138,7 @@ def fish(self, rod_index: int, iteration: int = 1, /):
                 item = get_item('aquamarine_dye')
                 white(f'{RARITY_COLORS[rarity]}OUTSTANDING CATCH! {AQUA}'
                         f'You found a {item.display()}{AQUA}.')
-                self.recieve_item(item.to_obj())
+                self.receive_item(item.to_obj())
                 continue
             if zone == 'wilderness':
                 if random_bool(0.000_000_1):
@@ -146,7 +146,7 @@ def fish(self, rod_index: int, iteration: int = 1, /):
                     item = get_item('nadeshiko_dye')
                     white(f'{RARITY_COLORS[rarity]}GREAT CATCH! {AQUA}'
                             f'You found a {item.display()}{AQUA}.')
-                    self.recieve_item(item.to_obj())
+                    self.receive_item(item.to_obj())
                     continue
             if self.island == 'jerry':
                 if random_bool(0.000_000_1):
@@ -154,7 +154,7 @@ def fish(self, rod_index: int, iteration: int = 1, /):
                     item = get_item('iceberg_dye')
                     white(f'{RARITY_COLORS[rarity]}GREAT CATCH! {AQUA}'
                             f'You found a {item.display()}{AQUA}.')
-                    self.recieve_item(item.to_obj())
+                    self.receive_item(item.to_obj())
                     continue
 
             if random_bool(treasure_chance):
@@ -199,7 +199,7 @@ def fish(self, rod_index: int, iteration: int = 1, /):
                 if getattr(drop_item, 'count', 1) != 1:
                     drop_item.count = 1
 
-                self.recieve_item(drop)
+                self.receive_item(drop)
                 self.collect(drop_name, drop.get('count', 1))
 
                 if is_treasure:
@@ -268,13 +268,13 @@ def gather(self, name: str, tool_index: int | None,
                     blue(f'Cultivating {format_roman(cultivating_level - 1)} {YELLOW}on your {tool.display()}'
                          f' {YELLOW}was upgraded to {BLUE}Cultivating {format_roman(cultivating_level)}{YELLOW}!')
 
-            self.recieve_item({'name': drop_item, 'count': count_pool})
+            self.receive_item({'name': drop_item, 'count': count_pool})
             self.collect(drop_item, count_pool)
 
             if resource.name == 'wheat':
                 seeds_pool = random_amount((0, 3), mult=fortune_mult)
                 if seeds_pool != 0:
-                    self.recieve_item({'name': 'seeds', 'count': seeds_pool})
+                    self.receive_item({'name': 'seeds', 'count': seeds_pool})
                     self.collect('seeds', seeds_pool)
 
             self.add_skill_exp('farming', random_amount(resource.farming_exp, mult=farming_exp_mult), display=True)
@@ -284,7 +284,7 @@ def gather(self, name: str, tool_index: int | None,
                 item = get_item('wild_strawberry_dye')
                 white(f'{RARITY_COLORS[rarity]}{format_rarity(rarity)} DROP! '
                         f'{WHITE}({item.display()}{WHITE}) {magic_find_str}')
-                self.recieve_item(item.to_obj())
+                self.receive_item(item.to_obj())
 
             if i >= (last_cp + cp_step) * iteration:
                 while i >= (last_cp + cp_step) * iteration:
@@ -340,11 +340,11 @@ def gather(self, name: str, tool_index: int | None,
                 if i != 0:
                     sleep(0.02)
 
-                self.recieve_item({'name': wood_name, 'count': count_pool})
+                self.receive_item({'name': wood_name, 'count': count_pool})
                 if is_wood:
                     self.collect(wood_name, count_pool)
                     if random_amount((1, 5)) == 1:
-                        self.recieve_item({'name': f'{wood_name[:-5]}_sapling',
+                        self.receive_item({'name': f'{wood_name[:-5]}_sapling',
                                            'count': 1})
 
                 self.add_skill_exp('foraging', resource.foraging_exp,
@@ -355,7 +355,7 @@ def gather(self, name: str, tool_index: int | None,
                     item = get_item('mango_dye')
                     white(f'{RARITY_COLORS[rarity]}{format_rarity(rarity)} DROP! '
                           f'{WHITE}({item.display()}{WHITE}) {magic_find_str}')
-                    self.recieve_item(item.to_obj())
+                    self.receive_item(item.to_obj())
 
             if i >= (last_cp + cp_step) * iteration:
                 while i >= (last_cp + cp_step) * iteration:
@@ -422,12 +422,12 @@ def gather(self, name: str, tool_index: int | None,
             fortune_mult = 1 + mining_fortune / 100
 
             if random_amount(compact_chance) == 1:
-                self.recieve_item({'name': enchanted_item, 'count': 1})
+                self.receive_item({'name': enchanted_item, 'count': 1})
                 self.collect(enchanted_item, 1)
                 aqua(f'{BOLD}COMPACT! {CLN}You found a {GREEN}{format_name(enchanted_item)}')
             else:
                 count_pool = random_amount(default_amount, mult=fortune_mult)
-                self.recieve_item({'name': drop_item, 'count': count_pool})
+                self.receive_item({'name': drop_item, 'count': count_pool})
                 self.collect(drop_item, count_pool)
 
             if use_compact:
@@ -462,7 +462,7 @@ def gather(self, name: str, tool_index: int | None,
                     pet_item = get_item('rock_pet', rarity=rock_pet_rarity)
                     green(f'You reached a new Ore Mined Milestone of {BLUE}{ores_mined} {GREEN}ores!')
                     green(f'A wild {pet_item.display()} {GREEN}has decided to befriend you!')
-                    self.recieve_item(pet_item.to_obj())
+                    self.receive_item(pet_item.to_obj())
 
             self.add_exp(random_amount(resource.exp, mult=exp_mult))
             self.add_skill_exp('mining', random_amount(resource.mining_exp, mult=mining_exp_mult), display=True)
@@ -473,7 +473,7 @@ def gather(self, name: str, tool_index: int | None,
             if 'diamond' in resource.name:
                 if random_bool(0.01 * (1 + magic_find / 100)):
                     loot = get_item('rare_diamond')
-                    self.recieve_item(loot.to_obj())
+                    self.receive_item(loot.to_obj())
 
                     rarity_color = RARITY_COLORS['rare']
                     white(f'{rarity_color}RARE DROP! '
@@ -484,7 +484,7 @@ def gather(self, name: str, tool_index: int | None,
                     item = get_item('emerald_dye')
                     white(f'{RARITY_COLORS[rarity]}{format_rarity(rarity)} DROP! '
                             f'{WHITE}({item.display()}{WHITE}) {magic_find_str}')
-                    self.recieve_item(item.to_obj())
+                    self.receive_item(item.to_obj())
 
             mithril_powder = random_amount(resource.mithril_powder)
             if mithril_powder != 0:
@@ -579,14 +579,14 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
         use_kill_count = True
 
     damage_bonus_mult = 1
-    damage_recieved_mult = 1
+    damage_received_mult = 1
 
     if weapon_name == 'axe_of_the_shredded' and name in ZOMBIES:
         damage_bonus_mult *= 3.5
-        damage_recieved_mult *= 0.75
+        damage_received_mult *= 0.75
     elif weapon_name == 'reaper_falchion' and name in ZOMBIES:
         damage_bonus_mult *= 3
-        damage_recieved_mult *= 0.8
+        damage_received_mult *= 0.8
     elif weapon_name == 'revenant_falchion' and name in ZOMBIES:
         damage_bonus_mult *= 2.5
     elif weapon_name == 'undead_sword' and name in UNDEADS:
@@ -598,23 +598,23 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
         damage_bonus_mult *= 2
 
     elif weapon_name == 'pooch_sword' and name in WOLVES:
-        damage_recieved_mult *= 0.8
+        damage_received_mult *= 0.8
         strength += 150
     elif weapon_name == 'shaman_sword' and name in WOLVES:
-        damage_recieved_mult *= 0.8
+        damage_received_mult *= 0.8
 
     elif weapon_name == 'atomsplit_katana' and name in ENDERMEN:
         damage_bonus_mult *= 5.5
-        damage_recieved_mult *= 0.88
+        damage_received_mult *= 0.88
     elif weapon_name == 'vorpal_katana' and name in ENDERMEN:
         damage_bonus_mult *= 4.5
-        damage_recieved_mult *= 0.91
+        damage_received_mult *= 0.91
     elif weapon_name == 'voidedge_katana' and name in ENDERMEN:
         damage_bonus_mult *= 3.5
-        damage_recieved_mult *= 0.94
+        damage_received_mult *= 0.94
     elif weapon_name == 'voidwalker_katana' and name in ENDERMEN:
         damage_bonus_mult *= 2.5
-        damage_recieved_mult *= 0.97
+        damage_received_mult *= 0.97
 
     elif weapon_name == 'end_sword' and name in END_MOBS:
         damage_bonus_mult *= 2
@@ -732,7 +732,7 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
             defense += 100
     elif three_set_bonus == 'absolute_unit':
         if name in WOLVES:
-            damage_recieved_mult *= 0.8
+            damage_received_mult *= 0.8
 
     enchants = 0
     enchants += {1: 0.05, 2: 0.1, 3: 0.15, 4: 0.2, 5: 0.3,
@@ -775,7 +775,7 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
         no_pain_no_gain.append(25 * piece_enchants.get('no_pain_no_gain', 0))
 
         if piece.modifier == 'molten' and name in NETHER_MOBS:
-            damage_recieved_mult *= 0.98
+            damage_received_mult *= 0.98
 
     if self.has_item({'name': 'healing_ring'}):
         healing_mult += 0.1
@@ -849,43 +849,43 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
 
     if name in SEA_CREATURES:
         if self.has_item({'name': 'sea_creature_artifact'}):
-            damage_recieved_mult *= 0.85
+            damage_received_mult *= 0.85
         elif self.has_item({'name': 'sea_creature_ring'}):
-            damage_recieved_mult *= 0.9
+            damage_received_mult *= 0.9
         elif self.has_item({'name': 'sea_creature_talisman'}):
-            damage_recieved_mult *= 0.95
+            damage_received_mult *= 0.95
     if name in ZOMBIES:
         if self.has_item({'name': 'zombie_artifact'}):
-            damage_recieved_mult *= 0.85
+            damage_received_mult *= 0.85
         elif self.has_item({'name': 'zombie_ring'}):
-            damage_recieved_mult *= 0.9
+            damage_received_mult *= 0.9
         elif self.has_item({'name': 'zombie_talisman'}):
-            damage_recieved_mult *= 0.95
+            damage_received_mult *= 0.95
     if name in SPIDERS:
         if self.has_item({'name': 'spider_artifact'}):
-            damage_recieved_mult *= 0.85
+            damage_received_mult *= 0.85
     elif name in SPIDERS:
         if self.has_item({'name': 'spider_ring'}):
-            damage_recieved_mult *= 0.9
+            damage_received_mult *= 0.9
     elif name in SPIDERS:
         if self.has_item({'name': 'spider_talisman'}):
-            damage_recieved_mult *= 0.95
+            damage_received_mult *= 0.95
     if name in SKELETONS:
         if self.has_item({'name': 'skeleton_talisman'}):
-            damage_recieved_mult *= 0.95
+            damage_received_mult *= 0.95
     if name in END_MOBS:
         if self.has_item({'name': 'ender_relic'}):
-            damage_recieved_mult *= 0.75
+            damage_received_mult *= 0.75
         elif self.has_item({'name': 'ender_artifact'}):
-            damage_recieved_mult *= 0.8
+            damage_received_mult *= 0.8
     if name in WITHERS:
         if self.has_item({'name': 'wither_relic'}):
-            damage_recieved_mult *= 0.75
+            damage_received_mult *= 0.75
         elif self.has_item({'name': 'wither_artifact'}):
-            damage_recieved_mult *= 0.8
+            damage_received_mult *= 0.8
     if name in NETHER_MOBS:
         if self.has_item({'name': 'nether_artifact'}):
-            damage_recieved_mult *= 0.95
+            damage_received_mult *= 0.95
 
     intimidation_level = 0
     if self.has_item({'name': 'intimidation_artifact'}):
@@ -895,12 +895,12 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
     elif self.has_item({'name': 'intimidation_talisman'}):
         intimidation_level = 1
     if has_active_pet:
-        if 'legendary_flamvoyant' in active_pet.abilities:
+        if 'legendary_flamboyant' in active_pet.abilities:
             intimidation_level += floor(20 * pet_mult)
-        elif 'epic_flamvoyant' in active_pet.abilities:
+        elif 'epic_flamboyant' in active_pet.abilities:
             intimidation_level += floor(15 * pet_mult)
     if mob.level <= intimidation_level:
-        damage_recieved_mult = 0
+        damage_received_mult = 0
 
     burststopper_perc = 1
     if self.has_item({'name': 'burststopper_artifact'}):
@@ -909,7 +909,7 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
         burststopper_perc = 0.95
 
     if set_bonus == 'pumpkin_buff':
-        damage_recieved_mult *= 0.9
+        damage_received_mult *= 0.9
 
     soul_eater = weapon_enchants.get('soul_eater', 0) * 2
     soul_eater_strength = 0
@@ -952,7 +952,7 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
              f'{mob_color}{format_number(mob_hp)}{GRAY}'
              f'/{GREEN}{format_number(mob.health)}{RED}❤\n')
 
-        striked = False
+        struck = False
         strike_count = 0
 
         while True:
@@ -971,10 +971,10 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
             round_count *= 1 + attack_speed / 100
             round_count *= knockback * punch
 
-            if striked:
+            if struck:
                 sleep(attack_time_cost)
             else:
-                striked = True
+                struck = True
                 if not random_bool((45.75 + 0.625 * (speed / 100)) / 100):
                     round_count = 0
 
@@ -1073,27 +1073,27 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
             if last_stand != 0 and hp / health < 0.4:
                 actual_defense *= last_stand / 100
 
-            damage_recieved = mob.damage / (1 + actual_defense / 100)
-            damage_recieved *= damage_recieved_mult
+            damage_received = mob.damage / (1 + actual_defense / 100)
+            damage_received *= damage_received_mult
             if use_mithrils_protection:
-                damage_recieved = min(damage_recieved, health * 0.4)
-            if damage_recieved > 0.5 * hp:
-                damage_recieved *= burststopper_perc
-            if damage_recieved != 0:
-                hp = max(hp - damage_recieved, 0)
-                gray(f"You've recieved {YELLOW}"
-                     f"{format_number(damage_recieved)}{GRAY} damage.")
+                damage_received = min(damage_received, health * 0.4)
+            if damage_received > 0.5 * hp:
+                damage_received *= burststopper_perc
+            if damage_received != 0:
+                hp = max(hp - damage_received, 0)
+                gray(f"You've received {YELLOW}"
+                     f"{format_number(damage_received)}{GRAY} damage.")
 
-            true_damage_recieved = mob.true_damage / (1 + true_defense / 100)
-            true_damage_recieved *= damage_recieved_mult
+            true_damage_received = mob.true_damage / (1 + true_defense / 100)
+            true_damage_received *= damage_received_mult
             if use_mithrils_protection:
-                true_damage_recieved = min(true_damage_recieved, health * 0.4)
-            if true_damage_recieved > 0.5 * hp:
-                true_damage_recieved *= burststopper_perc
-            if true_damage_recieved != 0:
-                hp = max(hp - true_damage_recieved, 0)
-                gray(f"You've recieved {YELLOW}"
-                     f"{format_number(true_damage_recieved)}{GRAY}"
+                true_damage_received = min(true_damage_received, health * 0.4)
+            if true_damage_received > 0.5 * hp:
+                true_damage_received *= burststopper_perc
+            if true_damage_received != 0:
+                hp = max(hp - true_damage_received, 0)
+                gray(f"You've received {YELLOW}"
+                     f"{format_number(true_damage_received)}{GRAY}"
                      f" true damage.")
 
             exp_npng = 0
@@ -1109,14 +1109,14 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
                 return False
 
             if random_bool(0.5) and thorns != 0:
-                thorns_damage = (thorns / 100) * damage_recieved
+                thorns_damage = (thorns / 100) * damage_received
                 mob_hp -= thorns_damage
 
             mob_hp = max(mob_hp, 0)
 
             player_color = GREEN if hp >= health * 0.5 else YELLOW
             mob_color = GREEN if mob_hp >= mob.health * 0.5 else YELLOW
-            if damage_recieved != 0 or true_damage_recieved != 0:
+            if damage_received != 0 or true_damage_received != 0:
                 gray(f"Your HP: {player_color}{format_number(hp)}{GRAY}/"
                      f"{GREEN}{format_number(health)}{RED}❤\n"
                      f"{mob_name}'s HP: "
@@ -1162,7 +1162,7 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
             if not random_bool(drop_chance):
                 continue
 
-            self.recieve_item(pointer)
+            self.receive_item(pointer)
             self.collect(loot_name, amount_pool)
 
             if rarity not in {'common', 'uncommon'}:
@@ -1173,7 +1173,7 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
 
         if 'diamond' in mob.name:
             if random_bool(0.01 * (1 + magic_find / 100)):
-                self.recieve_item({'name': 'rare_diamond'})
+                self.receive_item({'name': 'rare_diamond'})
 
                 loot = get_item('rare_diamond')
                 if getattr(loot, 'count', 1) != 1:
@@ -1182,10 +1182,10 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
                 white(f'{rarity_color}RARE DROP! '
                       f'{WHITE}({loot.display()}{WHITE}) {magic_find_str}')
 
-        coins_recieved = (mob.coins + scavenger) * coins_mult
+        coins_received = (mob.coins + scavenger) * coins_mult
         if self.has_item({'name': 'scavenger_talisman'}):
-            coins_recieved += 0.5 * mob.level
-        coins_pool = random_int(coins_recieved)
+            coins_received += 0.5 * mob.level
+        coins_pool = random_int(coins_received)
         if coins_pool != 0:
             self.purse += coins_pool
             gray(f'+ {GOLD}{format_number(coins_pool)} Coins')
@@ -1199,10 +1199,10 @@ def slay(self, mob: Mob, weapon_index: int | None, iteration: int = 1,
 
         phoenix_pool = random()
         if phoenix_pool <= 0.0000008:
-            self.recieve_item({'name': 'phoenix_pet', 'rarity': 'epic'})
+            self.receive_item({'name': 'phoenix_pet', 'rarity': 'epic'})
             yellow(f'Wow! You found a {RED}Phoenix{YELLOW} pet!')
         elif phoenix_pool <= 0.000001:
-            self.recieve_item({'name': 'phoenix_pet', 'rarity': 'legendary'})
+            self.receive_item({'name': 'phoenix_pet', 'rarity': 'legendary'})
             yellow(f'Wow! You found a {RED}Phoenix{YELLOW} pet!')
 
         if count >= (last_cp + cp_step) * iteration:

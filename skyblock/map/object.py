@@ -62,7 +62,7 @@ def path_find(start_zone: Zone, end_zone: Zone,
             other_zone = conn[0] if conn[1] == start_zone else conn[1]
             if other_zone == end_zone:
                 return [start_zone, end_zone], calc_dist(start_zone, end_zone)
-            paths.append(  # tuple([*places], accum_dist, heuri_dist)
+            paths.append(
                 ([start_zone, other_zone], dists[tuple(conn)],
                  calc_dist(other_zone, end_zone))
             )

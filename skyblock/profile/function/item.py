@@ -10,8 +10,8 @@ from ...object.object import *
 
 __all__ = [
     'check_items', 'clearstash', 'get_active_pet', 'has_item', 'index_item',
-    'map_items', 'merge', 'pickupstash', 'put_stash', '_recieve_item',
-    'recieve_item', 'remove_item', 'split',
+    'map_items', 'merge', 'pickupstash', 'put_stash', '_receive_item',
+    'receive_item', 'remove_item', 'split',
 ]
 
 def check_items(self, /):
@@ -115,7 +115,7 @@ def pickupstash(self, /):
     stash = [item.copy().to_obj() for item in self.stash]
     self.stash = []
     for pointer in stash:
-        self.recieve_item(pointer)
+        self.receive_item(pointer)
 
 
 def put_stash(self, pointer: ItemPointer, /):
@@ -148,7 +148,7 @@ def put_stash(self, pointer: ItemPointer, /):
         " item stash! Use `pickupstash` to get it back!")
 
 
-def _recieve_item(self, pointer: ItemPointer, /) -> ItemPointer:
+def _receive_item(self, pointer: ItemPointer, /) -> ItemPointer:
     if len(pointer) == 0:
         return {}
 
@@ -203,8 +203,8 @@ def _recieve_item(self, pointer: ItemPointer, /) -> ItemPointer:
     return {}
 
 
-def recieve_item(self, pointer: ItemPointer, /):
-    item_left = self._recieve_item(pointer)
+def receive_item(self, pointer: ItemPointer, /):
+    item_left = self._receive_item(pointer)
     if len(item_left) != 0:
         self.put_stash(item_left)
         return
@@ -280,7 +280,7 @@ def split(self, index_1: int, index_2: int, amount: int, /):
         self.inventory[index_1].count -= amount
         self.inventory[index_2] = item_1.copy()
         self.inventory[index_2].count = amount
-        gray(f'Splitted {amount} item from '
+        gray(f'Split {amount} item from '
              f'slot {index_1 + 1} to slot {index_2 + 1}.')
         return
 
@@ -295,11 +295,11 @@ def split(self, index_1: int, index_2: int, amount: int, /):
 
     delta = min(amount, item_type.count - item_2.count)
     if amount > delta:
-        yellow(f'Splitting {delta} istead of {amount} item.')
+        yellow(f'Splitting {delta} instead of {amount} item.')
 
     self.inventory[index_1].count -= delta
     self.inventory[index_2].count += delta
-    gray(f'Splitted {delta} item from '
+    gray(f'Split {delta} item from '
          f'slot {index_1 + 1} to slot {index_2 + 1}.')
 
 
