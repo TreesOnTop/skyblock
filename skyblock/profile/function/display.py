@@ -855,7 +855,7 @@ def display_stat(self, stat_name: str, index: int | None = None, /):
         gray(f'\nBase extra strikes: {RED}{format_number(base)}')
         gray(f'Chance for 1 more: {RED}{format_number(chance)}%')
     elif stat_name == 'pristine':
-        gray(f'Chance: {GREEN}{format_number(chance)}%')
+        gray(f'Chance: {GREEN}{format_number(value)}%')
 
     dark_blue(f"{BOLD}{'':-^{width}}")
 
