@@ -1,12 +1,2 @@
-.DS_Store
-.vscode
-__pycache__
-
-build/bdist.*
-dist
-skyblock_peterhunt.egg-info
-*.pyc
-.gitpod.yml
-
-skyblock/format.py
 /skyblock-data/
+/.idea/
