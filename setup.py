@@ -9,7 +9,7 @@ setup(
     description=('Hypixel Skyblock Remake in Python.'
                  ' A command-line-based RPG game.'),
     packages=['skyblock'],
-    url='https://github.com/peter-hunt/skyblock',
+    url='https://github.com/treesontop/skyblock',
     classifiers=[
         'Programming Language :: Python :: 3',
         'License :: OSI Approved :: MIT License',

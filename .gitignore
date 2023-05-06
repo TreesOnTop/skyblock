@@ -9,3 +9,4 @@ skyblock_peterhunt.egg-info
 .gitpod.yml
 
 skyblock/format.py
+/skyblock-data/
