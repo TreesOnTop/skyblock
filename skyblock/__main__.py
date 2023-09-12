@@ -1,6 +1,5 @@
 from sys import version_info
 
-
 __all__ = ['skyblock_main']
 
 

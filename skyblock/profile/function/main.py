@@ -917,10 +917,17 @@ def mainloop(self):
 
         elif words[0] == 'unequip':
             part = words[1]
-            if part not in ARMOR_PARTS:
+            if part not in ARMOR_PARTS and part != 'all':
                 red('Please input a valid armor part!')
                 continue
-
+            if part == 'all':
+                for armor_piece in self.armor:
+                    if isinstance(armor_piece, Empty):
+                        continue
+                    self.receive_item(armor_piece.to_obj())
+                self.armor = [Empty() for _ in range(4)]
+                green(f'Unequipped all armor pieces!')
+                continue
             slot_index = ARMOR_PARTS.index(part)
             armor_piece = self.armor[slot_index]
 
