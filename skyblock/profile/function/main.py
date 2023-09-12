@@ -681,7 +681,7 @@ def mainloop(self):
             else:
                 red(f'Invalid subcommand of {words[0]}: {words[1]!r}')
 
-        elif words[0] == 'money':
+        elif words[0] in {'money', 'balance', 'bal'}:
             if len(words) == 3:
                 if words[1] == 'give':
                     amount = parse_int(words[2])
