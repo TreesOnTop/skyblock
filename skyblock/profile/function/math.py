@@ -164,7 +164,7 @@ def add_skill_exp(self, name: str, amount: Number, /, *, display=False):
 
         self.purse += coins_reward
 
-        width, _ = get_terminal_size()
+        width, _ = shutil.get_terminal_size()
         width = ceil(width * 0.8)
 
         dark_aqua(f"{BOLD}{'':-^{width}}")
