@@ -56,7 +56,7 @@ Display bestiary of the mob.
 > buy <index> [amount]
 Buy item from shop.
 
-> cheat
+> give <item>
 Cheat to debug.
 
 > clear

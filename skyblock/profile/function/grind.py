@@ -5,6 +5,8 @@ from os import get_terminal_size
 from random import randint, random, vonmisesvariate
 from time import sleep, time
 
+from tqdm import tqdm, trange
+
 from ...constant.ability import *
 from ...constant.colors import *
 from ...constant.mobs import *
@@ -237,20 +239,19 @@ def gather(self, name: str, tool_index: int | None,
         tool = Empty()
 
     enchants = getattr(tool, 'enchantments', {})
-
+    progress_bar = tqdm(range(1, iteration + 1),bar_format='{percentage:3.0f}%|{bar:10}|{n_fmt}/{total_fmt} [{remaining}]')
+    total_drops = 0
+    total_2nd_drops = 0
+    total_xp = 0
     if isinstance(resource, Crop):
         time_cost = 0.1
         if self.has_item({'name': 'farmer_orb'}):
             time_cost -= 0.02
-
         drop_item = resource.name
         default_amount = resource.amount
         farming_exp_mult = 1 + 0.01 * enchants.get('cultivating', 0)
         use_cultivating = enchants.get('cultivating', 0) != 0
-
-        last_cp = Decimal()
-        cp_step = Decimal('0.1')
-        for i in range(1, iteration + 1):
+        for i in progress_bar:
             sleep(time_cost)
             farming_fortune = self.get_stat('farming_fortune', tool_index)
             fortune_mult = 1 + farming_fortune / 100
@@ -268,16 +269,16 @@ def gather(self, name: str, tool_index: int | None,
                     blue(f'Cultivating {format_roman(cultivating_level - 1)} {YELLOW}on your {tool.display()}'
                          f' {YELLOW}was upgraded to {BLUE}Cultivating {format_roman(cultivating_level)}{YELLOW}!')
 
-            self.receive_item({'name': drop_item, 'count': count_pool})
-            self.collect(drop_item, count_pool)
+            self.receive_item({'name': drop_item, 'count': count_pool}, display=False)
+            total_drops += count_pool
 
             if resource.name == 'wheat':
                 seeds_pool = random_amount((0, 3), mult=fortune_mult)
                 if seeds_pool != 0:
-                    self.receive_item({'name': 'seeds', 'count': seeds_pool})
-                    self.collect('seeds', seeds_pool)
+                    self.receive_item({'name': 'seeds', 'count': seeds_pool}, display=False)
+                    total_2nd_drops += seeds_pool
 
-            self.add_skill_exp('farming', random_amount(resource.farming_exp, mult=farming_exp_mult), display=True)
+            total_xp += random_amount(resource.farming_exp, mult=farming_exp_mult)
 
             if random_bool((0.000_000_125) * (1 + magic_find / 100)):
                 rarity = 'rngesus'
@@ -285,23 +286,15 @@ def gather(self, name: str, tool_index: int | None,
                 white(f'{RARITY_COLORS[rarity]}{format_rarity(rarity)} DROP! '
                         f'{WHITE}({item.display()}{WHITE}) {magic_find_str}')
                 self.receive_item(item.to_obj())
-
-            if i >= (last_cp + cp_step) * iteration:
-                while i >= (last_cp + cp_step) * iteration:
-                    last_cp += cp_step
-                perc = floor((i / iteration) * 100)
-                gray(f'{i} / {iteration} ({perc}%) done')
+        self.collect(drop_item, total_drops)
+        self.collect('seeds', total_seeds)
+        self.add_skill_exp('farming', total_xp, display=True)
 
     elif isinstance(resource, Log):
-        is_wood = True
-
         break_amount = 1
         cooldown = 0
         time_cost = 0.5
-        if 'log' not in resource.name:
-            time_cost = 0.5
-            is_wood = False
-        elif getattr(tool, 'name', None) in {'jungle_axe', 'treecapitator'}:
+        if getattr(tool, 'name', None) in {'jungle_axe', 'treecapitator'}:
             cooldown = 2
             if has_active_pet:
                 if 'evolves_axes' in active_pet.abilities:
@@ -324,43 +317,32 @@ def gather(self, name: str, tool_index: int | None,
         magic_find = self.get_stat('magic_find', tool_index)
         magic_find_str = f'{AQUA}(+{format_number(magic_find)}% Magic Find!)'
 
-        last_cp = Decimal()
-        cp_step = Decimal('0.1')
-        last_harvest = time()
-        for i in range(1, iteration + 1):
-            sleep(max(last_harvest - time() + time_cost, 0))
+        for i in progress_bar:
+            sleep(time_cost)
 
             foraging_fortune = self.get_stat('foraging_fortune', tool_index)
             fortune_mult = 1 + foraging_fortune / 100
-
-            last_harvest = time()
             count_pool = random_int(fortune_mult)
 
             for i in range(break_amount):
                 if i != 0:
-                    sleep(0.02)
+                    sleep(0.01)
 
-                self.receive_item({'name': wood_name, 'count': count_pool})
-                if is_wood:
-                    self.collect(wood_name, count_pool)
-                    if random_amount((1, 5)) == 1:
-                        self.receive_item({'name': f'{wood_name[:-5]}_sapling',
-                                           'count': 1})
-
-                self.add_skill_exp('foraging', resource.foraging_exp,
-                                   display=True)
+                total_drops += count_pool
+                if random_amount((1, 5)) == 1:
+                    total_2nd_drops += 1
+                total_xp += resource.foraging_exp
 
                 if random_bool((0.000_000_1) * (1 + magic_find / 100)):
                     rarity = 'rngesus'
                     item = get_item('mango_dye')
-                    white(f'{RARITY_COLORS[rarity]}{format_rarity(rarity)} DROP! '
+                    white(f'\n{RARITY_COLORS[rarity]}{format_rarity(rarity)} DROP! '
                           f'{WHITE}({item.display()}{WHITE}) {magic_find_str}')
                     self.receive_item(item.to_obj())
-
-            if i >= (last_cp + cp_step) * iteration:
-                while i >= (last_cp + cp_step) * iteration:
-                    last_cp += cp_step
-                gray(f'{i} / {iteration} ({(last_cp * 100):.0f}%) done')
+        self.collect(resource.name, total_drops)
+        self.receive_item({'name': f'{wood_name[:-5]}_sapling','count': total_2nd_drops})
+        self.receive_item({'name': wood_name, 'count': total_drops})
+        self.add_skill_exp('foraging', total_xp, display=True)
 
     elif isinstance(resource, Mineral):
         count_ore = resource.name not in {'stone', 'netherrack', 'end_stone'}

@@ -203,7 +203,7 @@ def _receive_item(self, pointer: ItemPointer, /) -> ItemPointer:
     return {}
 
 
-def receive_item(self, pointer: ItemPointer, /):
+def receive_item(self, pointer: ItemPointer, /, display = True):
     item_left = self._receive_item(pointer)
     if len(item_left) != 0:
         self.put_stash(item_left)
@@ -224,7 +224,8 @@ def receive_item(self, pointer: ItemPointer, /):
         if hasattr(item, attr):
             setattr(item, attr, value)
     count_str = '' if count <= 1 else f' {DARK_GRAY}x {format_number(count)}'
-    gray(f'+ {item.display()}{count_str}')
+    if display:
+        gray(f'+ {item.display()}{count_str}')
 
 
 def remove_item(self, pointer: ItemPointer, /):
