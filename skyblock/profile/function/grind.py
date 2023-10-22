@@ -287,7 +287,8 @@ def gather(self, name: str, tool_index: int | None,
                         f'{WHITE}({item.display()}{WHITE}) {magic_find_str}')
                 self.receive_item(item.to_obj())
         self.collect(drop_item, total_drops)
-        self.collect('seeds', total_seeds)
+        if total_2nd_drops > 0:
+            self.collect('seeds', total_2nd_drops)
         self.add_skill_exp('farming', total_xp, display=True)
 
     elif isinstance(resource, Log):
@@ -340,7 +341,8 @@ def gather(self, name: str, tool_index: int | None,
                           f'{WHITE}({item.display()}{WHITE}) {magic_find_str}')
                     self.receive_item(item.to_obj())
         self.collect(resource.name, total_drops)
-        self.receive_item({'name': f'{wood_name[:-5]}_sapling','count': total_2nd_drops})
+        if total_2nd_drops > 0:
+            self.receive_item({'name': f'{wood_name[:-5]}_sapling','count': total_2nd_drops})
         self.receive_item({'name': wood_name, 'count': total_drops})
         self.add_skill_exp('foraging', total_xp, display=True)
 
@@ -393,10 +395,9 @@ def gather(self, name: str, tool_index: int | None,
         drop_item = resource.drop
         enchanted_item = 'enchanted_' + resource.drop.rstrip('_block')
         default_amount = resource.amount
+        total_exp = 0
 
-        last_cp = Decimal()
-        cp_step = Decimal('0.1')
-        for i in range(1, iteration + 1):
+        for i in progress_bar:
             sleep(time_cost)
             mining_fortune = self.get_stat('mining_fortune', tool_index)
             if is_gemstone:
@@ -404,13 +405,11 @@ def gather(self, name: str, tool_index: int | None,
             fortune_mult = 1 + mining_fortune / 100
 
             if random_amount(compact_chance) == 1:
+                aqua(f'\n{BOLD}COMPACT! {CLN}You found a {GREEN}{format_name(enchanted_item)}')
                 self.receive_item({'name': enchanted_item, 'count': 1})
-                self.collect(enchanted_item, 1)
-                aqua(f'{BOLD}COMPACT! {CLN}You found a {GREEN}{format_name(enchanted_item)}')
             else:
                 count_pool = random_amount(default_amount, mult=fortune_mult)
-                self.receive_item({'name': drop_item, 'count': count_pool})
-                self.collect(drop_item, count_pool)
+                total_drops += count_pool
 
             if use_compact:
                 self.inventory[tool_index].compact_count += 1
@@ -430,7 +429,7 @@ def gather(self, name: str, tool_index: int | None,
                         mining_exp_mult += 0.1 * enchants['compact']
                         compact_chance += (0.001, 0.002, 0.002, 0.003, 0.003,
                                            0.004, 0.004, 0.004, 0.005, 0.006)[enchants['compact'] - 1]
-                    blue(f'Compact {format_roman(compact_level - 1)} {YELLOW}on your {tool.display()}'
+                    blue(f'\nCompact {format_roman(compact_level - 1)} {YELLOW}on your {tool.display()}'
                          f' {YELLOW}was upgraded to {BLUE}Compact {format_roman(compact_level)}{YELLOW}!')
 
             if count_ore:
@@ -442,12 +441,12 @@ def gather(self, name: str, tool_index: int | None,
                                    100000: 'epic', 250000: 'legendary'}.get(ores_mined, '')
                 if rock_pet_rarity:
                     pet_item = get_item('rock_pet', rarity=rock_pet_rarity)
-                    green(f'You reached a new Ore Mined Milestone of {BLUE}{ores_mined} {GREEN}ores!')
+                    green(f'\nYou reached a new Ore Mined Milestone of {BLUE}{ores_mined} {GREEN}ores!')
                     green(f'A wild {pet_item.display()} {GREEN}has decided to befriend you!')
                     self.receive_item(pet_item.to_obj())
 
-            self.add_exp(random_amount(resource.exp, mult=exp_mult))
-            self.add_skill_exp('mining', random_amount(resource.mining_exp, mult=mining_exp_mult), display=True)
+            total_exp += random_amount(resource.exp, mult=exp_mult)
+            total_xp += random_amount(resource.mining_exp, mult=mining_exp_mult)
 
             if resource.name == 'end_stone' and random_bool(0.1):
                 self.slay(get_mob('endermite', level=37))
@@ -455,34 +454,27 @@ def gather(self, name: str, tool_index: int | None,
             if 'diamond' in resource.name:
                 if random_bool(0.01 * (1 + magic_find / 100)):
                     loot = get_item('rare_diamond')
-                    self.receive_item(loot.to_obj())
-
+                    self.receive_item(loot.to_obj(), display=False)
                     rarity_color = RARITY_COLORS['rare']
-                    white(f'{rarity_color}RARE DROP! '
-                          f'{WHITE}({loot.display()}{WHITE}) {magic_find_str}')
             elif 'emerald' in resource.name:
                 if random_bool((0.000_000_125) * (1 + magic_find / 100)):
                     rarity = 'rngesus'
                     item = get_item('emerald_dye')
-                    white(f'{RARITY_COLORS[rarity]}{format_rarity(rarity)} DROP! '
+                    white(f'\n{RARITY_COLORS[rarity]}{format_rarity(rarity)} DROP! '
                             f'{WHITE}({item.display()}{WHITE}) {magic_find_str}')
                     self.receive_item(item.to_obj())
 
             mithril_powder = random_amount(resource.mithril_powder)
             if mithril_powder != 0:
-                self.mithril_powder += mithril_powder
-                dark_green(f'+ {format_number(mithril_powder)} Mithril Powder')
-
-            if i >= (last_cp + cp_step) * iteration:
-                while i >= (last_cp + cp_step) * iteration:
-                    last_cp += cp_step
-                perc = floor((i / iteration) * 100)
-                gray(f'{i} / {iteration} ({perc}%) done')
+                total_2nd_drops += mithril_powder
 
             if 'mithril' in resource.name and randint(1, 50) == 1:
-                white('Titanium has spawned nearby!')
                 self.gather('titanium', tool_index)
-
+        self.collect(resource.name, total_drops)
+        self.receive_item({'name': drop_item, 'count': total_drops})
+        self.mithril_powder += total_2nd_drops
+        self.add_skill_xp('mining', total_xp, display=True)
+        self.add_xp(total_exp, display=True)
     else:
         red('Unknown resource type.')
 
