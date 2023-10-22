@@ -1,3 +1,4 @@
+import shutil
 from collections import defaultdict
 from math import ceil
 from os import get_terminal_size
@@ -273,7 +274,7 @@ def collect(self, name: str, amount: int, /):
     if current_level <= original_level:
         return
 
-    width, _ = get_terminal_size()
+    width, _ = shutil.get_terminal_size()
     width = ceil(width * 0.8)
     yellow(f"{BOLD}{'':-^{width}}")
 
