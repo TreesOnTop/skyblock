@@ -1,5 +1,6 @@
 import os
 import shutil
+import subprocess
 from json import load
 from os import mkdir
 from os.path import join
@@ -12,7 +13,6 @@ from .path import is_data, join_path
 
 
 __all__ = ['init']
-
 
 def init_home_dir(*names):
     if not Path(join_path(*names)).is_dir():
@@ -45,6 +45,7 @@ def install_data(*, is_update=False):
 
 
 def init():
+    run(['pip', 'install', '-r', 'requirements.txt'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
     init_home_dir('skyblock')
     init_home_dir('skyblock', 'saves')
     install_data()
