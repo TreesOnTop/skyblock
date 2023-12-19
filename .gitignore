@@ -1,3 +1,4 @@
 /dist/
 /build/
-/.gitignore/
+__pycache__/
+.vscode/
