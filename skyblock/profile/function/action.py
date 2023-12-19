@@ -468,7 +468,6 @@ def craft(self, recipe: Recipe | RecipeGroup, amount: int = 1, /):
         if hasattr(result_item, key):
             setattr(result_item, key, value)
 
-    result_item.count = result_pointer.get('count', 1) * amount
     self.receive_item(result_item.to_obj())
 
     if name.endswith('_minion'):
