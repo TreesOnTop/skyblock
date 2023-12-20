@@ -473,8 +473,8 @@ def gather(self, name: str, tool_index: int | None,
         self.collect(resource.name, total_drops)
         self.receive_item({'name': drop_item, 'count': total_drops})
         self.mithril_powder += total_2nd_drops
-        self.add_skill_xp('mining', total_xp, display=True)
-        self.add_xp(total_exp, display=True)
+        self.add_skill_exp('mining', total_xp, display=True)
+        self.add_exp(total_exp)
     else:
         red('Unknown resource type.')
 
