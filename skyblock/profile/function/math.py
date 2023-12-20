@@ -399,6 +399,7 @@ def get_stat(self, name: str, index: int | None = None, /, *,
             if current_ability in SET_BONUSES:
                 break
         else:
+            set_bonus = False
             continue
         if set_bonus is True:
             set_bonus = current_ability
