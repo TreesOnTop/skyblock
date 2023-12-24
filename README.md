@@ -1,11 +1,9 @@
 # Skyblock Beta
 
-![](https://img.shields.io/github/repo-size/peter-hunt/skyblock)
-![](https://img.shields.io/github/license/peter-hunt/skyblock)
-![](https://img.shields.io/github/issues/peter-hunt/skyblock)
-![](https://img.shields.io/github/stars/peter-hunt/skyblock)
-
-![](screenshots/social-preview.jpeg)
+![](https://img.shields.io/github/repo-size/treesontop/skyblock)
+![](https://img.shields.io/github/license/treesontop/skyblock)
+![](https://img.shields.io/github/issues/treesontop/skyblock)
+![](https://img.shields.io/github/stars/treesontop/skyblock)
 
 ## Hypixel Skyblock Remake in Python.
 
